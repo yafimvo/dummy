@@ -1,6 +1,6 @@
 name: check-pr
 
-on: [pull-request]
+on: [pull_request]
 
 jobs:
   broken-links:
