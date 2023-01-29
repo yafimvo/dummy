@@ -1,5 +1,7 @@
 # CHANGELOG
 
+## 0.1.2dev
+
 ## 0.1.1 (2023-01-29)
 
 - [Feature] 2nd release
