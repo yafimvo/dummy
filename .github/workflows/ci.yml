@@ -50,7 +50,7 @@ jobs:
           USER_NAME: ${{ secrets.USERNAME }}
           EMAIL: ${{ secrets.EMAIL }}
 
-        if: github.ref_name == 'test_cd' && startsWith(github.event.head_commit.message, 'RELEASE NEW VERSION TEST')
+        if: github.ref_name == 'release_test' && startsWith(github.event.head_commit.message, 'RELEASE NEW VERSION TEST')
         run: |
           pip install wheel
           python setup.py bdist_wheel 
