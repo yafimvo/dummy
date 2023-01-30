@@ -46,20 +46,18 @@ jobs:
           pkgmt check
 
       - name: Tag and Release to PyPI if necessary
-        env:
-          USER_NAME: ${{ secrets.USERNAME }}
-          EMAIL: ${{ secrets.EMAIL }}
 
         if: github.ref_name == 'release_test' && startsWith(github.event.head_commit.message, 'RELEASE NEW VERSION TEST')
         run: |
           pip install wheel
-          python setup.py bdist_wheel 
+          
           pip install twine
 
           git config --global user.email "${{ github.event.pusher.name }}"
           git config --global user.name "${{ github.event.pusher.email }}"
 
           echo "Bumping up tag version.."
+          
           pkgmt version --yes
 
           TAG=$(git describe --abbrev=0)
