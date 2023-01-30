@@ -1,0 +1,67 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        python-version: ['3.10']
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .
+          pip install ".[dev]"
+      - name: Test with pytest
+        run: |
+          pytest
+
+  # run: pkgmt check
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install 'pkgmt[check]'
+      - name: Check project
+        run: |
+          pkgmt check
+
+      - name: Tag and Release to PyPI if necessary
+        env:
+          USER_NAME: ${{ secrets.USERNAME }}
+          EMAIL: ${{ secrets.EMAIL }}
+
+        if: github.ref_name == 'test_cd' && startsWith(github.event.head_commit.message, 'RELEASE NEW VERSION TEST')
+        run: |
+          pip install wheel
+          python setup.py bdist_wheel 
+          pip install twine
+
+          git config --global user.email "${{ github.event.pusher.name }}"
+          git config --global user.name "${{ github.event.pusher.email }}"
+
+          echo "Bumping up tag version.."
+          pkgmt version --yes
+
+          TAG=$(git describe --abbrev=0)
+          echo "Releasing new version: $TAG"
+          echo "yes" | pkgmt release $TAG --production
