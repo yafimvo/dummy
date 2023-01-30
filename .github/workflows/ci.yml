@@ -46,18 +46,21 @@ jobs:
           pkgmt check
 
       - name: Tag and Release to PyPI if necessary
-
-        if: github.ref_name == 'release_test' && startsWith(github.event.head_commit.message, 'RELEASE NEW VERSION TEST')
+        if: github.ref_name == 'release_test' && startsWith(github.event.head_commit.message, 'RELEASE NEW VERSION TEST')      
+        env:
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           pip install wheel
-
-          git config --global user.email "${{ github.event.pusher.name }}"
-          git config --global user.name "${{ github.event.pusher.email }}"
-
-          echo "Bumping up tag version..."
           
+          pip install twine
+
+          git config user.email "github-actions@github.com"
+          git config user.name "github-actions"
+
+          echo "Bumping up tag version.."
           pkgmt version --yes
 
           TAG=$(git describe --abbrev=0)
           echo "Releasing new version: $TAG"
-          echo "yes" | pkgmt release $TAG --production
+          echo yes | pkgmt release $TAG --production
