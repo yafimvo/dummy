@@ -59,7 +59,7 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    if: github.ref_name == 'main' && startsWith(github.event.head_commit.message, 'tag and release this version')
+    if: github.ref_name == 'main' && startsWith(github.event.head_commit.message, '[release]')
     needs: [test, check]
     steps:
       - uses: actions/checkout@v2
