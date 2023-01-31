@@ -45,8 +45,12 @@ jobs:
         run: |
           pkgmt check
 
-      - name: Tag and Release to PyPI if necessary
-        if: github.ref_name == 'release_test' && startsWith(github.event.head_commit.message, 'RELEASE NEW VERSION TEST')      
+  release:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'release_test' && startsWith(github.event.head_commit.message, 'tag and release this version')
+    needs: [test, check]
+    steps:
+      - name: Tag and Publish to PyPI if necessary
         env:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
