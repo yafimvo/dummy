@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.11dev
+
+- [Feature] Some cool stuff
+
 ## 0.1.3dev
 
 - [Feature] 4th release
