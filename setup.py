@@ -43,6 +43,5 @@ setup(
     entry_points={
         # 'console_scripts': ['ploomber_dummy=ploomber_dummy.cli:cli'],
     },
+    post_install_message="Join us on slack! https://ploomber.io/community/"
 )
-
-print("Join us on slack! https://ploomber.io/community/")
