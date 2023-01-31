@@ -71,7 +71,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install 'pkgmt[check]' twine
+          pip install 'pkgmt[check]' twine wheel
 
       - name: Configure git
         run: |
