@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.1.11dev
+## 0.1.11 (2023-01-31)
 
 - [Feature] Some cool stuff
 
