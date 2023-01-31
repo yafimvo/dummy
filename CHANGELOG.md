@@ -2,7 +2,7 @@
 
 ## 0.1.11dev
 
-- [Fature] Some cool stuff
+- [Feature] Some cool stuff
 
 ## 0.1.3dev
 
