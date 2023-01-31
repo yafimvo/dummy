@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## 0.1.8dev
+- [Feature] post install link added
 
 ## 0.1.7 (2023-01-30)
 

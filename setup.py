@@ -44,3 +44,5 @@ setup(
         # 'console_scripts': ['ploomber_dummy=ploomber_dummy.cli:cli'],
     },
 )
+
+print("Join us on slack! https://ploomber.io/community/")
