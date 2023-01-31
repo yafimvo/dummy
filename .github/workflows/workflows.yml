@@ -30,7 +30,7 @@ jobs:
 
           pip install .
           # check package is importable
-          python -c "import sql"
+          python -c "import ploomber_dummy"
           pip install ".[dev]"
 
 
