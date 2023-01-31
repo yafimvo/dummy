@@ -62,7 +62,7 @@ jobs:
           git config user.email "github-actions@github.com"
           git config user.name "github-actions"
 
-          echo "Bumping up tag version..."
+          echo "Bumping up tag version"
           pkgmt version --yes
 
           TAG=$(git describe --abbrev=0)
