@@ -26,13 +26,13 @@ jobs:
           BRANCH_NAME=automated_release_branch_${{ github.head_ref || github.ref_name }}
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-          MAIN_BRANCH="main"
+          MAIN_BRANCH="protected_main"
           echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
 
       - name: Configure git
         run: |
-          git config user.email "github-actions@github.com"
-          git config user.name "github-actions"
+          git config --global user.email "github-actions@ploomber.io"
+          git config --global user.name "github-actions"
 
       - name: Create a new branch and bump up tag version
         env:
@@ -78,26 +78,3 @@ jobs:
         run: |
           gh pr review --approve
 
-      - name: Merge PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr merge --auto --delete-branch --squash $BRANCH_NAME
-
-      - name: Push TAG and release to PyPI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TWINE_USERNAME: "__token__"
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          TAG=${{ env.TAG }}
-          git push origin $TAG
-
-      - name: Release to PyPI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TWINE_USERNAME: "__token__"
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          TAG=${{ env.TAG }}
-          echo yes | pkgmt release $TAG --production
