@@ -36,7 +36,7 @@ jobs:
 
       - name: Create a new branch and bump up tag version
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_PUSH_KEY }}
         run: |
           MAIN_BRANCH=${{ env.MAIN_BRANCH }}
           BRANCH_NAME=${{ env.BRANCH_NAME }}
@@ -66,7 +66,7 @@ jobs:
 
       - name: Create a new PR for release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_PUSH_KEY }}
         run: |
           TAG=${{ env.TAG }}
 
