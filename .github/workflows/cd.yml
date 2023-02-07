@@ -117,4 +117,9 @@ jobs:
         run: |
           TAG=$(git describe)
           echo "$TAG"
+          echo "checkout"
+          git checkout ${{ github.event.pull_request.title }}
+          echo "commit"
+          git commit -m "pushing tag"
+          echo "pushing"
           git push origin refs/tags/${{ github.event.pull_request.title }}
