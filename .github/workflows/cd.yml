@@ -117,8 +117,8 @@ jobs:
         run: |
           TAG=$(git describe)
           echo "$TAG"
-          echo -b "checkout"
-          git checkout ${{ github.event.pull_request.title }}
+          echo "checkout"
+          git checkout -b ${{ github.event.pull_request.title }}
           echo "commit"
           git commit --allow-empty -m "pushing tag"
           echo "pushing"
