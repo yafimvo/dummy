@@ -75,7 +75,7 @@ jobs:
         run: |
           TAG=${{ env.TAG }}
 
-          gh pr create -B $MAIN_BRANCH --title "Automated PR Release - $TAG" -l "release" -r ploomber-bot --body "Automated PR to release a new version to PyPI"
+          gh pr create -B $MAIN_BRANCH --title "$TAG" -l "release" -r ploomber-bot --body "Automated PR to release a new version to PyPI"
 
 
   if_approved:
@@ -117,6 +117,5 @@ jobs:
         run: |
           TAG=$(git describe)
           echo "$TAG"
-
-          echo "PR TITLE IS : ${{ github.event.pull_request.title }}"
+          git push origin ${{ github.event.pull_request.title }}
           
