@@ -110,5 +110,4 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
           TAG = $(git describe)
-          echo "$TAG"
           
