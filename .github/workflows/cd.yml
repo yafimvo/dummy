@@ -107,6 +107,12 @@ jobs:
           git config user.email "github-actions@github.com"
           git config user.name "github-actions"
 
+      - name: Merge PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge --auto --delete-branch --squash ${{github.event.pull_request.number}}
+
       - name: Test TAG to push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
