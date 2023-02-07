@@ -115,8 +115,8 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          pkgmt version --yes --no-push
-
           TAG=$(git describe)
           echo "$TAG"
+
+          echot "PR TITLE IS : ${{ github.event.pull_request.title }}"
           
