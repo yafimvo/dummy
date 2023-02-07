@@ -94,8 +94,8 @@ jobs:
         run: |
           git config --global user.email "github-actions@ploomber.io"
           git config --global user.name "github-actions"
-          git config --global  pull.ff true
-
+          git config --global pull.ff true
+          
       - name: Set ENV variables
         run: |
           BRANCH_NAME=automated_release_branch_${{ github.head_ref || github.ref_name }}
@@ -110,5 +110,9 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          TAG=$(git describe --abbrev=0)
-          echo "tag to push : $TAG"
+          MAIN_BRANCH=${{ env.MAIN_BRANCH }}
+          BRANCH_NAME=${{ env.BRANCH_NAME }}
+
+          echo "Pulling latest version from123 : $MAIN_BRANCH"
+          git pull origin $MAIN_BRANCH
+
