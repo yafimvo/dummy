@@ -5,12 +5,15 @@ on:
     types:
       - closed
 
+  pull_request_review:
+    types:
+      - submitted
+  
+
 jobs:
   if_merged:
     if: ${{ (github.event.pull_request.merged == true) && (contains(github.event.pull_request.labels.*.name, 'release')) }}
     runs-on: ubuntu-latest
-    permissions:
-      packages: write    
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -28,7 +31,7 @@ jobs:
           BRANCH_NAME=automated_release_branch_${{ github.head_ref || github.ref_name }}
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-          MAIN_BRANCH="main"
+          MAIN_BRANCH="protected_main"
           echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
 
       - name: Configure git
@@ -72,11 +75,43 @@ jobs:
         run: |
           TAG=${{ env.TAG }}
 
-          gh pr create -B $MAIN_BRANCH --title "Automated PR Release - $TAG" --body "Automated PR to release a new version to PyPI"
+          gh pr create -B $MAIN_BRANCH --title "Automated PR Release - $TAG" -l "release" -r ploomber-bot --body "Automated PR to release a new version to PyPI"
 
-      - name: Approve PR with ploomber-bot
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+
+  if_approved:
+    if: ${{ (github.event.review.state == 'approved') && (contains(github.event.pull_request.labels.*.name, 'release')) }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+          ref: ${{ github.ref_name }}
+
+      - name: Set ENV variables
         run: |
-          gh pr review --approve
+          BRANCH_NAME=automated_release_branch_${{ github.head_ref || github.ref_name }}
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
+          MAIN_BRANCH="protected_main"
+          echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install 'pkgmt[check]' twine wheel
+          
+      - name: Configure git
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "github-actions"
+
+      - name: Test TAG to push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          TAG=$(git describe --abbrev=0)
+          echo "tag to push : $TAG"
