@@ -109,7 +109,7 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          git config pull.rebase false
+          git config pull.ff true
 
           echo "Pulling.."
           git pull origin protected_main --allow-unrelated-histories 
