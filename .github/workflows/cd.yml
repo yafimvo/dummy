@@ -112,5 +112,5 @@ jobs:
           git config pull.rebase false
 
           echo "Pulling.."
-          git pull origin protected_branch
+          git pull origin protected_branch --allow-unrelated-histories 
           
