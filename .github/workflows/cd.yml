@@ -109,5 +109,11 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
+          MAIN_BRANCH=${{ env.MAIN_BRANCH }}
+          BRANCH_NAME=${{ env.BRANCH_NAME }}
+
+          echo "Pulling latest version from : $MAIN_BRANCH"
+          git pull origin $MAIN_BRANCH
+                  
           TAG=$(git describe --abbrev=0)
           echo "tag to push : $TAG"
