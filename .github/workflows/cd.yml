@@ -118,5 +118,5 @@ jobs:
           TAG=$(git describe)
           echo "$TAG"
 
-          echot "PR TITLE IS : ${{ github.event.pull_request.title }}"
+          echo "PR TITLE IS : ${{ github.event.pull_request.title }}"
           
