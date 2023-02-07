@@ -88,6 +88,7 @@ jobs:
         with:
           python-version: '3.10'
           ref: ${{ github.ref_name }}
+          fetch-depth: 0
 
       - name: Set ENV variables
         run: |
