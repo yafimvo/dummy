@@ -109,12 +109,6 @@ jobs:
           MAIN_BRANCH="protected_main"
           echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
 
-      - name: Merge PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr merge --auto --delete-branch --squash ${{github.event.pull_request.number}}
-
       - name: Test TAG to push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
