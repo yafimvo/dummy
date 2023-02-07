@@ -82,12 +82,8 @@ jobs:
     if: ${{ (github.event.review.state == 'approved') && (contains(github.event.pull_request.labels.*.name, 'release')) }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
         with:
-          python-version: '3.10'
-          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - name: Configure git
@@ -95,19 +91,12 @@ jobs:
           git config --global user.email "github-actions@ploomber.io"
           git config --global user.name "github-actions"
 
-      - name: Set ENV variables
-        run: |
-          BRANCH_NAME=automated_release_branch_${{ github.head_ref || github.ref_name }}
-          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
-
-          MAIN_BRANCH="protected_main"
-          echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
-          
       - name: Test TAG to push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          TAG = $(git describe)
+          TAG=$(git describe)
+          echo "done"
           
