@@ -123,4 +123,4 @@ jobs:
         run: |
           TAG=$(git describe)
           echo "$TAG"
-          git push origin ${{ github.event.pull_request.title }}
+          git push origin refs/tags/${{ github.event.pull_request.title }}
