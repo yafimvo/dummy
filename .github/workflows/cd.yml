@@ -88,6 +88,12 @@ jobs:
         with:
           python-version: '3.10'
           ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config --global user.email "github-actions@ploomber.io"
+          git config --global user.name "github-actions"
 
       - name: Set ENV variables
         run: |
@@ -97,29 +103,11 @@ jobs:
           MAIN_BRANCH="protected_main"
           echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
           
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install 'pkgmt[check]' twine wheel
-          
-      - name: Configure git
-        run: |
-          git config user.email "github-actions@github.com"
-          git config user.name "github-actions"
-
-      - name: Merge PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr merge --auto --delete-branch --squash ${{github.event.pull_request.number}}
-
       - name: Test TAG to push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          git pull origin protected_main --rebase 
-
           TAG=$(git describe --abbrev=0)
           echo "tag to push : $TAG"
