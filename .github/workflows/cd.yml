@@ -113,7 +113,7 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          git pull origin protected_main
+          git pull origin
 
           TAG=$(git describe --abbrev=0)
           echo "tag to push : $TAG"
