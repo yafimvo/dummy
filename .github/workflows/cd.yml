@@ -90,10 +90,10 @@ jobs:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
 
-      - name: Configure git
+      - name: Install dependencies
         run: |
-          git config --global user.email "github-actions@ploomber.io"
-          git config --global user.name "github-actions"
+          python -m pip install --upgrade pip
+          pip install 'pkgmt[check]' twine wheel
 
       - name: Set ENV variables
         run: |
@@ -102,14 +102,28 @@ jobs:
 
           MAIN_BRANCH="protected_main"
           echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
-          
-      - name: Test TAG to push
+
+      - name: Configure git
+        run: |
+          git config --global user.email "github-actions@ploomber.io"
+          git config --global user.name "github-actions"
+
+      - name: Create a new branch and bump up tag version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TWINE_USERNAME: "__token__"
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          git fetch --all --tags
-          TAG=$(git describe --abbrev=0)
+          MAIN_BRANCH=${{ env.MAIN_BRANCH }}
+          BRANCH_NAME=${{ env.BRANCH_NAME }}
 
-          echo "Should create the following tag : $TAG"
+          echo "Pulling latest version from : $MAIN_BRANCH"
+          git pull origin $MAIN_BRANCH
+
+          echo "Creating a new branch : $BRANCH_NAME"
+          git branch $BRANCH_NAME
+          echo "SWITCH $BRANCH_NAME"
+          git switch $BRANCH_NAME          
+
+          pkgmt version --yes --no-push
+          
+          TAG=$(git describe --abbrev=0)
+          echo "Tag is : $TAG"
