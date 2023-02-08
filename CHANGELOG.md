@@ -1,6 +1,33 @@
 # CHANGELOG
 
-## 0.1.13dev
+## 0.1.20dev
+
+## 0.1.19 (2023-02-08)
+
+- [Feature] new feature
+
+## 0.1.18
+
+- [Feature] new feature
+
+## 0.1.17
+
+- [Feature] new feature
+
+## 0.1.16
+
+- [Feature] new feature
+
+## 0.1.15
+
+- [Feature] new feature
+
+## 0.1.14
+
+- [Feature] new feature
+
+## 0.1.13 (2023-02-08)
+
 - [Feature] new feature
 
 ## 0.1.12 (2023-01-31)

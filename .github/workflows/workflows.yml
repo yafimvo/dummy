@@ -66,7 +66,7 @@ jobs:
           pkgmt check
 
   if_release_candidate:
-    if: github.ref_name == 'main'
+    if: github.ref_name == 'main' && startsWith(github.event.head_commit.message, '[release]')
     needs: [test, check]
     runs-on: ubuntu-latest
     steps:
@@ -107,25 +107,25 @@ jobs:
           echo "Pulling latest version from : $MAIN_BRANCH"
           git pull origin $MAIN_BRANCH
 
-          echo "Creating a new branch : $BRANCH_NAME"
-          git branch $BRANCH_NAME
-          echo "SWITCH $BRANCH_NAME"
-          git switch $BRANCH_NAME          
+          echo "Checkout : $BRANCH_NAME"
+          git checkout -b $BRANCH_NAME  
 
-          pkgmt version --yes --no-push
+          git push --set-upstream origin $BRANCH_NAME
+          
+          pkgmt version --yes
           
           TAG=$(git describe --abbrev=0)
 
           echo "TAG=$TAG" >> $GITHUB_ENV
           
-          echo "Running git add"
-          git add .
+          # echo "Running git add"
+          # git add .
 
-          echo "Adding a commit"
-          git commit --allow-empty -m "updates version"
+          # echo "Adding a commit"
+          # git commit --allow-empty -m "updates version"
 
-          echo "Pushing changes to : $BRANCH_NAME"
-          git push origin $BRANCH_NAME
+          # echo "Pushing changes to : $BRANCH_NAME"
+          # git push origin $BRANCH_NAME
 
       - name: Create a new PR for release
         env:
@@ -135,7 +135,7 @@ jobs:
           gh pr create -B $MAIN_BRANCH --title "$TAG" -l "release" -r yafimvo -r ploomber-bot --body "Automated PR to release a new version [$TAG] to PyPI"
 
   if_release_pr_approved:
-    if: ${{ (github.event.review.state == 'approved') && (contains(github.event.pull_request.labels.*.name, 'release')) }}
+    if: github.ref_name == 'main' && startsWith(github.ref, 'refs/tags')
     needs: [test, check]
     runs-on: ubuntu-latest
     steps:
@@ -168,16 +168,6 @@ jobs:
 
           MAIN_BRANCH="main"
           echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
-
-      - name: Create a new TAG and Push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          TAG=${{ env.TAG }}
-          echo "Running : git tag -a $TAG -m 'releasing a new tag from automation'"
-          git tag -a $TAG -m "releasing a new tag from automation"
-          echo "Running : git push origin $TAG --no-verify"
-          git push origin $TAG --no-verify
 
       - name: Release to PyPI
         env:
