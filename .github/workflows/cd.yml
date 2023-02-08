@@ -98,25 +98,35 @@ jobs:
 
       - name: Configure git
         run: |
-          git config --global user.email "github-actions@ploomber.io"
-          git config --global user.name "github-actions"
+          git config user.email "github-actions@ploomber.io"
+          git config user.name "github-actions"
 
       - name: Set ENV variables
         run: |
+          TAG=${{ github.event.pull_request.title }}
+          echo "TAG=$TAG" >> $GITHUB_ENV
+
           BRANCH_NAME=automated_release_branch_${{ github.head_ref || github.ref_name }}
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
           MAIN_BRANCH="protected_main"
           echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
 
-      - name: Test TAG to push
+      - name: Create a new TAG and Push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG=${{ env.TAG }}
+          echo "Running : git tag -a $TAG -m 'releasing a new tag from automation'"
+          git tag -a $TAG -m "releasing a new tag from automation"
+          echo "Running : git push origin $TAG --no-verify"
+          git push origin $TAG --no-verify
+
+      - name: Release to PyPI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          TAG=${{ github.event.pull_request.title }}
-          echo "Running : git tag -a $TAG -m 'releasing a new tag from automation'"
-          git tag -a $TAG -m "releasing a new tag from automation"
-          echo "Running : git push origin $TAG --no-verify"
-          git push origin $TAG --no-verify
+          TAG=${{ env.TAG }}
+          echo "Should release this tag: $TAG"
