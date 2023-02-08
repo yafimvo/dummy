@@ -89,3 +89,4 @@ jobs:
         run: |
           TAG=$(git describe --abbrev=0)
           echo yes | pkgmt release $TAG --production
+
