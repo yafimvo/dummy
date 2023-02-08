@@ -66,8 +66,8 @@ jobs:
         run: |
           pkgmt check
 
-  if_release_pr_merged:
-    if: ${{ (github.event.pull_request.merged == true) && (contains(github.event.pull_request.labels.*.name, 'release')) }}
+  if_release_candidate_pr_merged_to_main:
+    if: ${{ (github.event.pull_request.merged == true) && (contains(github.event.pull_request.labels.*.name, 'release candidate')) }}
     needs: [test, check]
     runs-on: ubuntu-latest
     steps:
