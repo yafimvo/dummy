@@ -10,7 +10,6 @@ on:
     types:
       - submitted
       
-
 jobs:
   test:
     strategy:
@@ -95,6 +94,12 @@ jobs:
           git config user.email "github-actions@ploomber.io"
           git config user.name "github-actions"
 
+      - name: Merge release PR 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge --auto --delete-branch --squash $BRANCH_NAME
+
       - name: Create a new branch and bump up tag version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -131,8 +136,7 @@ jobs:
         run: |
           TAG=${{ env.TAG }}
 
-          gh pr create -B $MAIN_BRANCH --title "$TAG" -l "release" -r ploomber-bot --body "Automated PR to release a new version [$TAG] to PyPI"
-
+          gh pr create -B $MAIN_BRANCH --title "$TAG" -l "release" -r yafimvo, ploomber-bot --body "Automated PR to release a new version [$TAG] to PyPI"
 
   if_release_pr_approved:
     if: ${{ (github.event.review.state == 'approved') && (contains(github.event.pull_request.labels.*.name, 'release')) }}
@@ -158,6 +162,12 @@ jobs:
           git config user.email "github-actions@ploomber.io"
           git config user.name "github-actions"
 
+      - name: Merge release PR to main 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge --auto --delete-branch --squash $BRANCH_NAME
+          
       - name: Set ENV variables
         run: |
           TAG=${{ github.event.pull_request.title }}
