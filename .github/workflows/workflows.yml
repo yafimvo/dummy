@@ -154,12 +154,6 @@ jobs:
         run: |
           git config user.email "github-actions@ploomber.io"
           git config user.name "github-actions"
-
-      - name: Merge release PR to main 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr merge --auto --delete-branch --squash $BRANCH_NAME
           
       - name: Set ENV variables
         run: |
@@ -182,6 +176,12 @@ jobs:
           echo "Running : git push origin $TAG --no-verify"
           git push origin $TAG --no-verify
 
+      - name: Merge release PR to main 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge --auto --delete-branch --squash ${{github.event.pull_request.number}}
+          
       - name: Release to PyPI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -190,6 +190,4 @@ jobs:
         run: |
           TAG=${{ env.TAG }}
           echo yes | pkgmt release $TAG
-
-
 
