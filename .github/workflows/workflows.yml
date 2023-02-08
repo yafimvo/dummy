@@ -10,7 +10,6 @@ on:
     types:
       - submitted
       
-
 jobs:
   test:
     strategy:
@@ -94,6 +93,12 @@ jobs:
         run: |
           git config user.email "github-actions@ploomber.io"
           git config user.name "github-actions"
+
+      - name: Merge release PR 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge --auto --delete-branch --squash $BRANCH_NAME
 
       - name: Create a new branch and bump up tag version
         env:
