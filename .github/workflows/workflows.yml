@@ -135,7 +135,7 @@ jobs:
           gh pr create -B $MAIN_BRANCH --title "$TAG" -l "release" -r yafimvo -r ploomber-bot --body "Automated PR to release a new version [$TAG] to PyPI"
 
   if_release_pr_approved:
-    if: github.ref_name == 'main' && startsWith(github.ref, 'refs/tags'))
+    if: github.ref_name == 'main' && startsWith(github.ref, 'refs/tags')
     needs: [test, check]
     runs-on: ubuntu-latest
     steps:
