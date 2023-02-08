@@ -135,7 +135,7 @@ jobs:
           gh pr create -B $MAIN_BRANCH --title "$TAG" -l "release" -r yafimvo -r ploomber-bot --body "Automated PR to release a new version [$TAG] to PyPI"
 
   if_release_pr_approved:
-    if: github.ref_name == 'main' && startsWith(github.ref, 'refs/tags'))
+    if: github.ref_name == 'main' && startsWith(github.event.head_commit.message, 'Bumps up')
     needs: [test, check]
     runs-on: ubuntu-latest
     steps:
@@ -175,7 +175,7 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          TAG=${{ env.TAG }}
+          TAG=$(git describe --abbrev=0)
           echo yes | pkgmt release $TAG --production
 
       - name: Merge release PR to main 
