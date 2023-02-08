@@ -68,6 +68,7 @@ jobs:
 
   if_merged:
     if: ${{ (github.event.pull_request.merged == true) && (contains(github.event.pull_request.labels.*.name, 'release')) }}
+    needs: [test, check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -135,6 +136,7 @@ jobs:
 
   if_approved:
     if: ${{ (github.event.review.state == 'approved') && (contains(github.event.pull_request.labels.*.name, 'release')) }}
+    needs: [test, check]
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python ${{ matrix.python-version }}
