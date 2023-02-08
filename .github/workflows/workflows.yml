@@ -107,10 +107,8 @@ jobs:
           echo "Pulling latest version from : $MAIN_BRANCH"
           git pull origin $MAIN_BRANCH
 
-          echo "Creating a new branch : $BRANCH_NAME"
-          git branch $BRANCH_NAME
-          echo "SWITCH $BRANCH_NAME"
-          git switch $BRANCH_NAME          
+          echo "Checkout : $BRANCH_NAME"
+          git checkout -b $BRANCH_NAME  
 
           pkgmt version --yes
           
