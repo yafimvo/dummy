@@ -115,6 +115,8 @@ jobs:
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          TAG=$(git describe)
-          echo "$TAG"
-          git push origin refs/tags/${{ github.event.pull_request.title }}
+          TAG=${{ github.event.pull_request.title }}
+          echo "Running : git tag -a $TAG -m 'releasing a new tag from automation'"
+          git tag -a $TAG -m "releasing a new tag from automation"
+          echo "Running : git push origin $TAG --no-verify"
+          git push origin $TAG --no-verify
