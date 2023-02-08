@@ -129,7 +129,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=${{ env.TAG }}
-          gh pr create -B $MAIN_BRANCH --title "$TAG" -l "release" -r yafimvo, ploomber-bot --body "Automated PR to release a new version [$TAG] to PyPI"
+          gh pr create -B $MAIN_BRANCH --title "$TAG" -l "release" -r yafimvo -r ploomber-bot --body "Automated PR to release a new version [$TAG] to PyPI"
 
   if_release_pr_approved:
     if: ${{ (github.event.review.state == 'approved') && (contains(github.event.pull_request.labels.*.name, 'release')) }}
@@ -190,4 +190,6 @@ jobs:
         run: |
           TAG=${{ env.TAG }}
           echo yes | pkgmt release $TAG
+
+
 
