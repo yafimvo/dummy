@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## 0.1.13dev
+- [Feature] new feature
 
 ## 0.1.12 (2023-01-31)
 
