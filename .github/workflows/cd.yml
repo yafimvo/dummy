@@ -109,14 +109,24 @@ jobs:
           MAIN_BRANCH="protected_main"
           echo "MAIN_BRANCH=$MAIN_BRANCH" >> $GITHUB_ENV  
 
-      - name: Test TAG to push
+      - name: Create a new TAG and Push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TWINE_USERNAME: "__token__"
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
+          echo "Extracting tag for PR name"
           TAG=${{ github.event.pull_request.title }}
           echo "Running : git tag -a $TAG -m 'releasing a new tag from automation'"
           git tag -a $TAG -m "releasing a new tag from automation"
           echo "Running : git push origin $TAG --no-verify"
           git push origin $TAG --no-verify
+
+      - name: Release to PyPI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          TAG=${{ env.TAG }}
+          echo "Should release $TAG"
